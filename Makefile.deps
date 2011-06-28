@@ -1,0 +1,23 @@
+# we can optionaly turn-off creation of dependecies
+ifndef NODEPS
+GEN_DEPS_CMD = \
+	@set -e; rm -f $@; 						\
+	$(DEPCMD) $< > $@.$$$$; 					\
+	sed 's,\($*\)\.o[ :]*,$(DEPS_PREFIX)\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+$(DEPS_PREFIX)%.d: %.S
+	$(GEN_DEPS_CMD)
+
+$(DEPS_PREFIX)%.d: %.c $(DDEPS)
+	$(GEN_DEPS_CMD)
+
+ALL_OBJS := $(OBJS) $(foreach target, $(TARGETS), $(OBJS-$(target)))
+
+ifneq ($(MAKECMDGOALS),clean)
+-include $(addprefix $(DEPS_PREFIX),$(ALL_OBJS:.o=.d))
+else
+clean::
+	-rm -f $(DEPS_PREFIX)*.d $(DEPS_PREFIX)*.d.*
+endif
+endif

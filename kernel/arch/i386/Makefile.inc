@@ -1,0 +1,1 @@
+CFLAGS += -D_EM_WSIZE=4

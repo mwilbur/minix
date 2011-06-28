@@ -1,0 +1,48 @@
+require_relative 'cross_builder'
+require 'rake/clean'
+
+MINIX_HOME = '/Users/matt/Projects/minix'
+
+BUILD_DIR = 'build'
+OBJ_DIR = File.join(BUILD_DIR,'obj')
+STDIO_OBJ_DIR = File.join(OBJ_DIR, 'stdio')
+
+#directory STDIO_OBJ_DIR
+
+Rake::CrossBuilder.new do |builder|
+  builder.target = 'libstdio.a'
+  builder.objects_path  = STDIO_OBJ_DIR
+  builder.target_type = :static_library
+  builder.source_search_paths = ["stdio/*.c"]
+  builder.include_paths = [ File.join(MINIX_HOME,'include')]
+  builder.compilation_options << [ '-D__minix', '-D_MINIX', '-D_EM_WSIZE=4']
+  builder.target_prerequisites = [BUILD_DIR, OBJ_DIR, STDIO_OBJ_DIR]
+end
+
+#directory OBJ_DIR
+directory STDIO_OBJ_DIR
+#directory BUILD_DIR
+
+CLEAN << [ BUILD_DIR, OBJ_DIR, STDIO_OBJ_DIR ]
+
+def find_source_file_for(object_file)
+  object_file.gsub( File.join(OBJ_DIR,''), '' ).ext('c')
+end
+
+STDIO_SRC = FileList['stdio/*.c']
+STDIO_OBJ = STDIO_SRC.map { |source_file| File.join(OBJ_DIR, source_file ).ext('o') }
+
+CLEAN << STDIO_OBJ
+
+STDIO_OBJ.each do |object_file|
+  file object_file => [ find_source_file_for( object_file ), BUILD_DIR, OBJ_DIR, STDIO_OBJ_DIR ]  do |task|
+    puts task.name
+    FileUtils.touch( task.name )
+  end
+
+end
+
+
+task :objs => STDIO_OBJ
+task :builder => 'libstdio.a'
+
