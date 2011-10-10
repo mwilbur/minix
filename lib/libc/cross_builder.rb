@@ -8,12 +8,17 @@ module Rake
           'c' => {
               :source_file_extension => 'c',
               :compiler => 'arm-none-eabi-gcc',
-              :linker => 'arm-none-eabi-gcc'
+              :linker => 'arm-none-eabi-gcc',
+              :archiver => 'arm-none-eabi-ar',
+              :librarian => 'arm-none-eabi-ranlib'
+
           },
           'c++' => {
               :source_file_extension => 'cpp',
               :compiler => 'arm-none-eabi-g++',
-              :linker => 'arm-none-eabi-g++'
+              :linker => 'arm-none-eabi-g++',
+              :archiver => 'arm-none-eabi-ar',
+              :librarian => 'arm-none-eabi-ranlib'
           },
       }
 
