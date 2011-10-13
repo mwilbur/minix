@@ -24,9 +24,9 @@ C_LIB = Rake::CrossBuilder.new do |builder|
   builder.target = "#{BUILD_DIR}/libc.a"
   builder.objects_path  = LIBC_OBJ_DIR
   builder.target_type = :static_library
-  builder.source_search_paths = ["stdio/*.c", "ansi/*.c", "other/*.c"]
+  builder.source_search_paths = ["stdio/*.c", "ansi/*.c", "other/*.c", "ip/strcasecmp.c"]
   builder.include_paths = [ File.join(MINIX_HOME,'include')]
-  builder.compilation_options << [ '-D__minix', '-D_MINIX', '-D_EM_WSIZE=4','-fomit-frame-pointer','-Os']
+  builder.compilation_options << [ '-D__minix', '-D_MINIX', '-D_EM_WSIZE=4','-fomit-frame-pointer','-Os','-DNOFLOAT']
   builder.target_prerequisites = [LIBC_OBJ_DIR, MACHINE_DIR ]
 end
 
