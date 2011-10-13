@@ -1,7 +1,7 @@
 require_relative 'cross_builder'
 require 'rake/clean'
 
-MINIX_HOME = '/Users/matt/Projects/minix'
+MINIX_HOME = "#{ENV['HOME']}/Projects/minix"
 MINIX_INCLUDES = File.join(MINIX_HOME,'include')
 
 BUILD_DIR = File.absolute_path 'build'
@@ -12,10 +12,7 @@ MACHINE_DIR = File.join(MINIX_HOME, 'include', 'machine')
 directory LIBC_OBJ_DIR
 
 task MACHINE_DIR do |dir|
-  begin
-    FileUtils.symlink( File.join(MINIX_INCLUDES,'arch','i386'), dir.name )
-  rescue Exception
-  end
+   #FileUtils.symlink( File.join(MINIX_INCLUDES,'arch','i386'), dir.name )
 end
 
 
